@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { configureStore, type Middleware } from '@reduxjs/toolkit';
+import { configureStore, type Middleware, type UnknownAction } from '@reduxjs/toolkit';
 import FavoritesPage from '../favorites-page';
 import { offersReducer } from '../../../store/slices/offers-slice';
 import { userReducer } from '../../../store/slices/user-slice';
@@ -60,23 +60,24 @@ const mockOffer3: Offer = {
   previewImage: 'test3.jpg',
 };
 
+type MockStore = ReturnType<typeof configureStore>;
+
 const createMockStore = (
   authorizationStatus: string = 'AUTH',
   favoriteOffers: Offer[] = [],
   isLoading: boolean = false
-) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let storeRef: ReturnType<typeof configureStore> | null = null;
+): MockStore => {
+  let storeRef: MockStore | null = null;
 
-  const mockMiddleware: Middleware = () => (next) => (action) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (action.type === 'offers/fetchFavorites/pending' && storeRef) {
-      setTimeout(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        storeRef!.dispatch(fetchFavoriteOffersAction.fulfilled(favoriteOffers, '', undefined));
-      }, 0);
+  const mockMiddleware: Middleware<{ offers: unknown; user: unknown; property: unknown; favorites: unknown }, UnknownAction> = () => (next) => (action: UnknownAction): UnknownAction => {
+    if (action && typeof action === 'object' && 'type' in action) {
+      const actionType = String((action as { type: unknown }).type);
+      if (actionType === 'offers/fetchFavorites/pending' && storeRef) {
+        setTimeout(() => {
+          storeRef!.dispatch(fetchFavoriteOffersAction.fulfilled(favoriteOffers, '', undefined));
+        }, 0);
+      }
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return next(action);
   };
 
@@ -100,15 +101,12 @@ const createMockStore = (
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-          extraArgument: {} as any,
+          extraArgument: {},
         },
       }).concat(mockMiddleware),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
   storeRef = store;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return store;
 };
 

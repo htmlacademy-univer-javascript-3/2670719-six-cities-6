@@ -3,13 +3,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { configureStore, type Middleware } from '@reduxjs/toolkit';
+import { configureStore, type Middleware, type UnknownAction } from '@reduxjs/toolkit';
 import PropertyPage from '../property-page';
 import { offersReducer } from '../../../store/slices/offers-slice';
 import { userReducer } from '../../../store/slices/user-slice';
 import { propertyReducer } from '../../../store/slices/property-slice';
 import { favoritesReducer } from '../../../store/slices/favorites-slice';
-import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, toggleFavoriteAction } from '../../../store/thunk';
+import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction } from '../../../store/thunk';
 import type { Offer } from '../../../types/offer';
 import type { Review } from '../../../types/review';
 
@@ -67,6 +67,8 @@ const mockReview: Review = {
   rating: 5,
 };
 
+type MockStore = ReturnType<typeof configureStore>;
+
 const createMockStore = (
   currentOffer: Offer | null = mockOffer,
   nearbyOffers: Offer[] = [],
@@ -74,37 +76,29 @@ const createMockStore = (
   isOfferLoading: boolean = false,
   authorizationStatus: string = 'NO_AUTH',
   actionTracker?: { pendingActions: string[] }
-) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let storeRef: ReturnType<typeof configureStore> | null = null;
+): MockStore => {
+  let storeRef: MockStore | null = null;
 
-  const mockMiddleware: Middleware = () => (next) => (action) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const mockMiddleware: Middleware<{ offers: unknown; user: unknown; property: unknown; favorites: unknown }, UnknownAction> = () => (next) => (action: UnknownAction): UnknownAction => {
     if (storeRef && action && typeof action === 'object' && 'type' in action) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const actionType = action.type as string;
-      // Track pending actions if tracker is provided
+      const actionType = String((action as { type: unknown }).type);
       if (actionTracker && actionType.includes('/pending')) {
         actionTracker.pendingActions.push(actionType);
       }
       if (actionType === 'data/fetchOffer/pending') {
         setTimeout(() => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           storeRef!.dispatch(fetchOfferAction.fulfilled(currentOffer || mockOffer, '', '1'));
         }, 0);
       } else if (actionType === 'data/fetchNearbyOffers/pending') {
         setTimeout(() => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           storeRef!.dispatch(fetchNearbyOffersAction.fulfilled(nearbyOffers, '', '1'));
         }, 0);
       } else if (actionType === 'data/fetchReviews/pending') {
         setTimeout(() => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           storeRef!.dispatch(fetchReviewsAction.fulfilled(reviews, '', '1'));
         }, 0);
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return next(action);
   };
 
@@ -131,16 +125,13 @@ const createMockStore = (
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-          extraArgument: {} as any,
+          extraArgument: {},
         },
       }).concat(mockMiddleware),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
-  storeRef = store as any;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
-  return store as any;
+  storeRef = store;
+  return store;
 };
 
 describe('PropertyPage', () => {
@@ -291,10 +282,6 @@ describe('PropertyPage', () => {
   });
 
   it('should dispatch fetch actions on mount', () => {
-    // Test that component renders correctly when mounting
-    // The useEffect will dispatch fetch actions, but we can't easily test
-    // dispatch calls with thunks in this test setup. Instead, we verify
-    // the component renders correctly which implies useEffect executed.
     const store = createMockStore(mockOffer, [], [], false, 'NO_AUTH');
     render(
       <Provider store={store}>
@@ -303,8 +290,6 @@ describe('PropertyPage', () => {
         </MemoryRouter>
       </Provider>
     );
-    // Component should render successfully, which means useEffect ran
-    // and the component is functioning correctly
     expect(screen.getByText('Test Offer')).toBeInTheDocument();
   });
 
@@ -320,8 +305,6 @@ describe('PropertyPage', () => {
     );
     const favoriteButton = screen.getByRole('button', { name: /To bookmarks/i });
     await user.click(favoriteButton);
-    // Navigation is handled by react-router, component should not dispatch action when not authorized
-    // The navigation happens via useNavigate hook
   });
 
   it('should dispatch toggleFavoriteAction when favorite button clicked and authorized', async () => {
@@ -338,14 +321,11 @@ describe('PropertyPage', () => {
     await waitFor(() => {
       expect(screen.getByText('Test Offer')).toBeInTheDocument();
     });
-    // Clear previous calls (from mount effects)
     const initialCallCount = dispatchSpy.mock.calls.length;
     const favoriteButton = screen.getByRole('button', { name: /To bookmarks/i });
     await user.click(favoriteButton);
-    // Check that dispatch was called again (new call after click)
     await waitFor(() => {
       expect(dispatchSpy.mock.calls.length).toBeGreaterThan(initialCallCount);
-      // Check that at least one new call is a function (thunk action)
       const newCalls = dispatchSpy.mock.calls.slice(initialCallCount);
       const hasThunkCall = newCalls.some((call) => typeof call[0] === 'function');
       expect(hasThunkCall).toBe(true);

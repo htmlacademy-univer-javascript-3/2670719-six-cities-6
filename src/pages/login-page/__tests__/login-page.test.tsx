@@ -91,7 +91,6 @@ describe('LoginPage', () => {
     await user.click(submitButton);
 
     expect(dispatchSpy).toHaveBeenCalled();
-    // Check that loginAction was dispatched (it's a thunk, so we check the function was called)
     const calls = dispatchSpy.mock.calls;
     const loginCall = calls.find((call) =>
       typeof call[0] === 'function' ||
@@ -178,7 +177,6 @@ describe('LoginPage', () => {
     await user.click(submitButton);
 
     expect(dispatchSpy).toHaveBeenCalled();
-    // Check that loginAction was dispatched with trimmed email
     const calls = dispatchSpy.mock.calls;
     const loginCall = calls.find((call) =>
       typeof call[0] === 'function' ||

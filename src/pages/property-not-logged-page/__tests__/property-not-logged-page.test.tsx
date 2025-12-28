@@ -11,7 +11,6 @@ describe('PropertyNotLoggedPage', () => {
   it('should render premium badge', () => {
     render(<PropertyNotLoggedPage />);
     const premiumBadges = screen.getAllByText('Premium');
-    // Should have premium badge in property section (not in nearby offers)
     expect(premiumBadges.length).toBeGreaterThan(0);
     const propertySection = screen.getByText(/Beautiful & luxurious studio/i).closest('.property');
     expect(propertySection?.querySelector('.property__mark')).toHaveTextContent('Premium');
@@ -24,7 +23,6 @@ describe('PropertyNotLoggedPage', () => {
     expect(featuresList?.querySelector('.property__feature--entire')).toHaveTextContent('Apartment');
     expect(screen.getByText('3 Bedrooms')).toBeInTheDocument();
     expect(screen.getByText('Max 4 adults')).toBeInTheDocument();
-    // Check that Apartment is in the property features, not in nearby offers
     const apartmentInFeatures = featuresList?.querySelector('.property__feature--entire');
     expect(apartmentInFeatures).toHaveTextContent('Apartment');
   });
