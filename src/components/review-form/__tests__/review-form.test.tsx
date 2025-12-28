@@ -65,7 +65,7 @@ describe('ReviewForm', () => {
         <ReviewForm offerId="1" />
       </Provider>
     );
-    const star5 = screen.getByLabelText(/perfect/i);
+    const star5 = screen.getByTitle(/perfect/i);
     await user.click(star5);
     const ratingInput = screen.getByDisplayValue('5');
     expect(ratingInput).toBeChecked();
@@ -119,7 +119,7 @@ describe('ReviewForm', () => {
         <ReviewForm offerId="1" />
       </Provider>
     );
-    const star5 = screen.getByLabelText(/perfect/i);
+    const star5 = screen.getByTitle(/perfect/i);
     const textarea = screen.getByPlaceholderText(/Tell how was your stay/i);
     const submitButton = screen.getByRole('button', { name: 'Submit' });
     await user.click(star5);
@@ -136,7 +136,7 @@ describe('ReviewForm', () => {
         <ReviewForm offerId="1" />
       </Provider>
     );
-    const star5 = screen.getByLabelText(/perfect/i);
+    const star5 = screen.getByTitle(/perfect/i);
     const textarea = screen.getByPlaceholderText(/Tell how was your stay/i);
     const submitButton = screen.getByRole('button', { name: 'Submit' });
     await user.click(star5);
@@ -153,12 +153,12 @@ describe('ReviewForm', () => {
   it('should clear form after successful submit', async () => {
     const user = userEvent.setup();
     const store = createMockStore();
-    render(
+    const { container } = render(
       <Provider store={store}>
         <ReviewForm offerId="1" />
       </Provider>
     );
-    const star5 = screen.getByLabelText(/perfect/i);
+    const star5 = container.querySelector('label[title="perfect"]') as HTMLLabelElement;
     const textarea = screen.getByPlaceholderText(/Tell how was your stay/i);
     const submitButton = screen.getByRole('button', { name: 'Submit' });
     await user.click(star5);
