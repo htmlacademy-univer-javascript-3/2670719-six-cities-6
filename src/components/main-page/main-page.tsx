@@ -14,10 +14,13 @@ function MainPage(): JSX.Element {
   const currentCity = useSelector((state: RootState) => state.data.city);
   const currentSorting = useSelector((state: RootState) => state.data.sorting);
   const isLoading = useSelector((state: RootState) => state.data.isLoading);
+  const authorizationStatus = useSelector((state: RootState) => state.data.authorizationStatus);
+  const user = useSelector((state: RootState) => state.data.user);
   const allOffers = useSelector((state: RootState) => state.data.offers);
   const filteredOffers = allOffers.filter((offer) => offer.city.name === currentCity);
   const offers = sortOffers(filteredOffers, currentSorting);
   const city = offers[0]?.city || filteredOffers[0]?.city || { name: currentCity, location: { latitude: 52.37454, longitude: 4.897976, zoom: 13 } };
+  const favoriteOffers = allOffers.filter((offer) => offer.isFavorite);
 
   if (isLoading) {
     return (
@@ -39,19 +42,29 @@ function MainPage(): JSX.Element {
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to="/favorites">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
+                {authorizationStatus === 'AUTH' ? (
+                  <>
+                    <li className="header__nav-item user">
+                      <Link className="header__nav-link header__nav-link--profile" to="/favorites">
+                        <div className="header__avatar-wrapper user__avatar-wrapper">
+                        </div>
+                        <span className="header__user-name user__name">{user?.email}</span>
+                        <span className="header__favorite-count">{favoriteOffers.length}</span>
+                      </Link>
+                    </li>
+                    <li className="header__nav-item">
+                      <a className="header__nav-link" href="#">
+                        <span className="header__signout">Sign out</span>
+                      </a>
+                    </li>
+                  </>
+                ) : (
+                  <li className="header__nav-item">
+                    <Link className="header__nav-link" to="/login">
+                      <span className="header__signout">Sign in</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
           </div>
