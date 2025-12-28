@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { changeCity } from '../../store/action';
-import { RootState } from '../../store';
+import { selectCity } from '../../store/selectors';
 
 const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'] as const;
 
 function CitiesList(): JSX.Element {
   const dispatch = useDispatch();
-  const currentCity = useSelector((state: RootState) => state.data.city);
+  const currentCity = useSelector(selectCity);
 
   const handleCityClick = (city: string) => {
     dispatch(changeCity(city));

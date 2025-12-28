@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import OfferCard from '../offer-card/offer-card';
 import type { Offer } from '../../types/offer';
 
@@ -7,18 +8,14 @@ type OffersListProps = {
   onCardMouseLeave?: () => void;
 }
 
-function OffersList({offers, onCardMouseEnter, onCardMouseLeave}: OffersListProps): JSX.Element {
-  const handleCardMouseEnter = (id: string) => {
-    if (onCardMouseEnter) {
-      onCardMouseEnter(id);
-    }
-  };
+const OffersList = memo(({offers, onCardMouseEnter, onCardMouseLeave}: OffersListProps): JSX.Element => {
+  const handleCardMouseEnter = useCallback((id: string) => {
+    onCardMouseEnter?.(id);
+  }, [onCardMouseEnter]);
 
-  const handleCardMouseLeave = () => {
-    if (onCardMouseLeave) {
-      onCardMouseLeave();
-    }
-  };
+  const handleCardMouseLeave = useCallback(() => {
+    onCardMouseLeave?.();
+  }, [onCardMouseLeave]);
 
   return (
     <div className="cities__places-list places__list tabs__content">
@@ -32,7 +29,9 @@ function OffersList({offers, onCardMouseEnter, onCardMouseLeave}: OffersListProp
       ))}
     </div>
   );
-}
+});
+
+OffersList.displayName = 'OffersList';
 
 export default OffersList;
 

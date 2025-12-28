@@ -1,25 +1,26 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 import { loginAction } from '../../store/thunk';
-import { RootState, AppDispatch } from '../../store';
+import { AppDispatch } from '../../store';
+import { selectAuthorizationStatus } from '../../store/selectors';
 
 function LoginPage(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch<AppDispatch>();
-  const authorizationStatus = useSelector((state: RootState) => state.data.authorizationStatus);
+  const authorizationStatus = useSelector(selectAuthorizationStatus);
 
-  if (authorizationStatus === 'AUTH') {
-    return <Navigate to="/" />;
-  }
-
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (email.trim() && password.trim()) {
       dispatch(loginAction({ email: email.trim(), password }));
     }
-  };
+  }, [email, password, dispatch]);
+
+  if (authorizationStatus === 'AUTH') {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="page page--gray page--login">

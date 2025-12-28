@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import type { Offer } from '../../types/offer';
 
@@ -7,18 +8,14 @@ type OfferCardProps = {
   onMouseLeave?: () => void;
 }
 
-function OfferCard({offer, onMouseEnter, onMouseLeave}: OfferCardProps): JSX.Element {
-  const handleMouseEnter = () => {
-    if (onMouseEnter) {
-      onMouseEnter(offer.id);
-    }
-  };
+const OfferCard = memo(({offer, onMouseEnter, onMouseLeave}: OfferCardProps): JSX.Element => {
+  const handleMouseEnter = useCallback(() => {
+    onMouseEnter?.(offer.id);
+  }, [offer.id, onMouseEnter]);
 
-  const handleMouseLeave = () => {
-    if (onMouseLeave) {
-      onMouseLeave();
-    }
-  };
+  const handleMouseLeave = useCallback(() => {
+    onMouseLeave?.();
+  }, [onMouseLeave]);
 
   return (
     <article
@@ -62,6 +59,8 @@ function OfferCard({offer, onMouseEnter, onMouseLeave}: OfferCardProps): JSX.Ele
       </div>
     </article>
   );
-}
+});
+
+OfferCard.displayName = 'OfferCard';
 
 export default OfferCard;

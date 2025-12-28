@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeSorting } from '../../store/action';
-import { RootState } from '../../store';
+import { selectSorting } from '../../store/selectors';
 
 const SORT_OPTIONS = [
   'Popular',
@@ -12,7 +12,7 @@ const SORT_OPTIONS = [
 
 function SortOptions(): JSX.Element {
   const dispatch = useDispatch();
-  const currentSorting = useSelector((state: RootState) => state.data.sorting);
+  const currentSorting = useSelector(selectSorting);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionClick = (option: string) => {

@@ -1,22 +1,44 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState, FormEvent, ChangeEvent, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { postReviewAction } from '../../store/thunk';
+import { AppDispatch } from '../../store';
+import { selectIsReviewPosting } from '../../store/selectors';
 
-function ReviewForm(): JSX.Element {
+type ReviewFormProps = {
+  offerId: string;
+}
+
+function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
   const [rating, setRating] = useState('');
   const [review, setReview] = useState('');
+  const dispatch = useDispatch<AppDispatch>();
+  const isReviewPosting = useSelector(selectIsReviewPosting);
 
-  const handleRatingChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleRatingChange = useCallback((evt: ChangeEvent<HTMLInputElement>) => {
     setRating(evt.target.value);
-  };
+  }, []);
 
-  const handleReviewChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleReviewChange = useCallback((evt: ChangeEvent<HTMLTextAreaElement>) => {
     setReview(evt.target.value);
-  };
+  }, []);
 
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-  };
+    if (rating && review.length >= 50 && review.length <= 300) {
+      dispatch(postReviewAction({
+        offerId,
+        reviewData: {
+          comment: review,
+          rating: Number(rating),
+        },
+      })).then(() => {
+        setRating('');
+        setReview('');
+      });
+    }
+  }, [rating, review, offerId, dispatch]);
 
-  const isSubmitDisabled = !rating || review.length < 50;
+  const isSubmitDisabled = !rating || review.length < 50 || review.length > 300 || isReviewPosting;
 
   return (
     <form className="reviews__form form" action="#" method="post" onSubmit={handleSubmit}>

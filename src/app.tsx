@@ -6,11 +6,10 @@ import FavoritesPage from './components/favorites-page/favorites-page';
 import PropertyPage from './components/property-page/property-page';
 import NotFoundPage from './components/not-found-page/not-found-page';
 import PrivateRoute from './components/private-route/private-route';
-import { RootState } from './store';
+import { selectFavoriteOffers } from './store/selectors';
 
 function App(): JSX.Element {
-  const offers = useSelector((state: RootState) => state.data.offers);
-  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
+  const favoriteOffers = useSelector(selectFavoriteOffers);
 
   return (
     <Routes>
@@ -25,6 +24,7 @@ function App(): JSX.Element {
         }
       />
       <Route path="/offer/:id" element={<PropertyPage />} />
+      <Route path="/404" element={<NotFoundPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

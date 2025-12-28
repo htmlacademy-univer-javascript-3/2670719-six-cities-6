@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import OffersList from '../offers-list/offers-list';
@@ -6,21 +6,31 @@ import Map from '../map/map';
 import CitiesList from '../cities-list/cities-list';
 import SortOptions from '../sort-options/sort-options';
 import Spinner from '../spinner/spinner';
-import { RootState } from '../../store';
-import { sortOffers } from '../../utils/sorting';
+import {
+  selectIsLoading,
+  selectSortedOffers,
+  selectCityFromOffers,
+  selectAuthorizationStatus,
+  selectUser,
+  selectFavoriteOffers,
+} from '../../store/selectors';
 
 function MainPage(): JSX.Element {
   const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
-  const currentCity = useSelector((state: RootState) => state.data.city);
-  const currentSorting = useSelector((state: RootState) => state.data.sorting);
-  const isLoading = useSelector((state: RootState) => state.data.isLoading);
-  const authorizationStatus = useSelector((state: RootState) => state.data.authorizationStatus);
-  const user = useSelector((state: RootState) => state.data.user);
-  const allOffers = useSelector((state: RootState) => state.data.offers);
-  const filteredOffers = allOffers.filter((offer) => offer.city.name === currentCity);
-  const offers = sortOffers(filteredOffers, currentSorting);
-  const city = offers[0]?.city || filteredOffers[0]?.city || { name: currentCity, location: { latitude: 52.37454, longitude: 4.897976, zoom: 13 } };
-  const favoriteOffers = allOffers.filter((offer) => offer.isFavorite);
+  const isLoading = useSelector(selectIsLoading);
+  const offers = useSelector(selectSortedOffers);
+  const city = useSelector(selectCityFromOffers);
+  const authorizationStatus = useSelector(selectAuthorizationStatus);
+  const user = useSelector(selectUser);
+  const favoriteOffers = useSelector(selectFavoriteOffers);
+
+  const handleCardMouseEnter = useCallback((id: string) => {
+    setSelectedOfferId(id);
+  }, []);
+
+  const handleCardMouseLeave = useCallback(() => {
+    setSelectedOfferId(null);
+  }, []);
 
   if (isLoading) {
     return (
@@ -82,7 +92,7 @@ function MainPage(): JSX.Element {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{offers.length} places to stay in {currentCity}</b>
               <SortOptions />
-              <OffersList offers={offers} onCardMouseEnter={setSelectedOfferId} onCardMouseLeave={() => setSelectedOfferId(null)} />
+              <OffersList offers={offers} onCardMouseEnter={handleCardMouseEnter} onCardMouseLeave={handleCardMouseLeave} />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
