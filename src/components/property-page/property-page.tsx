@@ -1,13 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import ReviewForm from '../review-form/review-form';
 import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import NearbyOffersList from '../nearby-offers-list/nearby-offers-list';
-import { offers } from '../../mocks/offers';
-import { reviews } from '../../mocks/reviews';
+import { RootState } from '../../store';
 
 function PropertyPage(): JSX.Element {
   const { id } = useParams();
+  const offers = useSelector((state: RootState) => state.data.offers);
   const currentOffer = offers.find((offer) => offer.id === id);
   const nearbyOffers = offers.filter((offer) => offer.id !== id).slice(0, 3);
   const city = currentOffer?.city || { name: 'Amsterdam', location: { latitude: 52.37454, longitude: 4.897976, zoom: 13 } };
@@ -167,7 +168,7 @@ function PropertyPage(): JSX.Element {
                 </div>
               </div>
               <section className="property__reviews reviews">
-                <ReviewsList reviews={reviews} />
+                <ReviewsList reviews={[]} />
                 <ReviewForm />
               </section>
             </div>

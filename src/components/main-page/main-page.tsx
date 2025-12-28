@@ -5,6 +5,7 @@ import OffersList from '../offers-list/offers-list';
 import Map from '../map/map';
 import CitiesList from '../cities-list/cities-list';
 import SortOptions from '../sort-options/sort-options';
+import Spinner from '../spinner/spinner';
 import { RootState } from '../../store';
 import { sortOffers } from '../../utils/sorting';
 
@@ -12,10 +13,19 @@ function MainPage(): JSX.Element {
   const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
   const currentCity = useSelector((state: RootState) => state.data.city);
   const currentSorting = useSelector((state: RootState) => state.data.sorting);
+  const isLoading = useSelector((state: RootState) => state.data.isLoading);
   const allOffers = useSelector((state: RootState) => state.data.offers);
   const filteredOffers = allOffers.filter((offer) => offer.city.name === currentCity);
   const offers = sortOffers(filteredOffers, currentSorting);
   const city = offers[0]?.city || filteredOffers[0]?.city || { name: currentCity, location: { latitude: 52.37454, longitude: 4.897976, zoom: 13 } };
+
+  if (isLoading) {
+    return (
+      <div className="page page--gray page--main">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="page page--gray page--main">

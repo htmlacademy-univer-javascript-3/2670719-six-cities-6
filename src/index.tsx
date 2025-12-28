@@ -4,14 +4,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import App from './app';
-import { offers } from './mocks/offers';
-import { fillOffers } from './store/action';
+import { fetchOffersAction } from './store/thunk';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-store.dispatch(fillOffers(offers));
+store.dispatch(fetchOffersAction());
 
 root.render(
   <React.StrictMode>
