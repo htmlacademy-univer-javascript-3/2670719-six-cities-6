@@ -33,12 +33,12 @@ describe('SortOptions', () => {
 
   it('should render current sorting', () => {
     const store = createMockStore('Price: low to high');
-    render(
+    const { container } = render(
       <Provider store={store}>
         <SortOptions />
       </Provider>
     );
-    const sortingType = screen.getByRole('button', { name: /sort by/i }).parentElement?.querySelector('.places__sorting-type');
+    const sortingType = container.querySelector('.places__sorting-type');
     expect(sortingType).toHaveTextContent('Price: low to high');
   });
 
