@@ -13,6 +13,7 @@ import {
   selectAuthorizationStatus,
   selectUser,
   selectFavoriteOffers,
+  selectCity,
 } from '../../store/selectors';
 
 function MainPage(): JSX.Element {
@@ -20,6 +21,7 @@ function MainPage(): JSX.Element {
   const isLoading = useSelector(selectIsLoading);
   const offers = useSelector(selectSortedOffers);
   const city = useSelector(selectCityFromOffers);
+  const currentCity = useSelector(selectCity);
   const authorizationStatus = useSelector(selectAuthorizationStatus);
   const user = useSelector(selectUser);
   const favoriteOffers = useSelector(selectFavoriteOffers);
