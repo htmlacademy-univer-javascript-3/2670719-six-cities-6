@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './app';
 
 const root = ReactDOM.createRoot(
@@ -10,6 +11,8 @@ const OFFERS_COUNT = 5;
 
 root.render(
   <React.StrictMode>
-    <App offersCount={OFFERS_COUNT} />
+    <BrowserRouter>
+      <App offersCount={OFFERS_COUNT} />
+    </BrowserRouter>
   </React.StrictMode>
 );
