@@ -5,23 +5,25 @@ import FavoritesPage from './components/favorites-page/favorites-page';
 import PropertyPage from './components/property-page/property-page';
 import NotFoundPage from './components/not-found-page/not-found-page';
 import PrivateRoute from './components/private-route/private-route';
+import type { Offer } from './mocks/offers';
 
 type AppProps = {
-  offersCount: number;
+  offers: Offer[];
 }
 
-function App({offersCount}: AppProps): JSX.Element {
+function App({offers}: AppProps): JSX.Element {
   const authorizationStatus = 'NO_AUTH';
+  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
 
   return (
     <Routes>
-      <Route path="/" element={<MainPage offersCount={offersCount} />} />
+      <Route path="/" element={<MainPage offers={offers} />} />
       <Route path="/login" element={<LoginPage />} />
       <Route
         path="/favorites"
         element={
           <PrivateRoute authorizationStatus={authorizationStatus}>
-            <FavoritesPage />
+            <FavoritesPage offers={favoriteOffers} />
           </PrivateRoute>
         }
       />
