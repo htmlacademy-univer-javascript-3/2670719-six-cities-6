@@ -1,20 +1,23 @@
-import { useState } from 'react';
 import OfferCard from '../offer-card/offer-card';
 import type { Offer } from '../../mocks/offers';
 
 type OffersListProps = {
   offers: Offer[];
+  onCardMouseEnter?: (id: string) => void;
+  onCardMouseLeave?: () => void;
 }
 
-function OffersList({offers}: OffersListProps): JSX.Element {
-  const [, setActiveOfferId] = useState<string | null>(null);
-
+function OffersList({offers, onCardMouseEnter, onCardMouseLeave}: OffersListProps): JSX.Element {
   const handleCardMouseEnter = (id: string) => {
-    setActiveOfferId(id);
+    if (onCardMouseEnter) {
+      onCardMouseEnter(id);
+    }
   };
 
   const handleCardMouseLeave = () => {
-    setActiveOfferId(null);
+    if (onCardMouseLeave) {
+      onCardMouseLeave();
+    }
   };
 
   return (

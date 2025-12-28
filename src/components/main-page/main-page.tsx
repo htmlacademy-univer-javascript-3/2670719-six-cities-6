@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import OffersList from '../offers-list/offers-list';
+import Map from '../map/map';
 import type { Offer } from '../../mocks/offers';
 
 type MainPageProps = {
@@ -7,6 +9,8 @@ type MainPageProps = {
 }
 
 function MainPage({offers}: MainPageProps): JSX.Element {
+  const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
+  const city = offers[0]?.city || { name: 'Amsterdam', location: { latitude: 52.37454, longitude: 4.897976, zoom: 13 } };
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -96,10 +100,12 @@ function MainPage({offers}: MainPageProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <OffersList offers={offers} />
+              <OffersList offers={offers} onCardMouseEnter={setSelectedOfferId} onCardMouseLeave={() => setSelectedOfferId(null)} />
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map">
+                <Map city={city} offers={offers} selectedOfferId={selectedOfferId} />
+              </section>
             </div>
           </div>
         </div>
