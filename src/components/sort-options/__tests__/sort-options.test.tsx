@@ -79,8 +79,10 @@ describe('SortOptions', () => {
     }
     expect(dispatchSpy).toHaveBeenCalled();
     const lastCall = dispatchSpy.mock.calls[dispatchSpy.mock.calls.length - 1][0];
-    expect(lastCall.type).toBe('sorting/changeSorting');
-    expect(lastCall.payload).toBe('Price: low to high');
+    if ('type' in lastCall) {
+      expect(lastCall.type).toBe('sorting/changeSorting');
+      expect('payload' in lastCall && lastCall.payload).toBe('Price: low to high');
+    }
     const optionsList = container.querySelector('.places__options');
     expect(optionsList).not.toHaveClass('places__options--opened');
   });

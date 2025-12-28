@@ -1,8 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { changeCity } from '../../store/action';
 import { selectCity } from '../../store/selectors';
-
-const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'] as const;
+import { CITIES } from '../../constants/constants';
 
 function CitiesList(): JSX.Element {
   const dispatch = useDispatch();

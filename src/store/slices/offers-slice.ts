@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { changeCity, changeSorting } from '../action';
 import { fetchOffersAction, toggleFavoriteAction } from '../thunk';
+import { DEFAULT_CITY, DEFAULT_SORTING } from '../../constants/constants';
 import type { Offer } from '../../types/offer';
 
 type OffersState = {
@@ -11,9 +12,9 @@ type OffersState = {
 }
 
 const initialState: OffersState = {
-  city: 'Paris',
+  city: DEFAULT_CITY,
   offers: [],
-  sorting: 'Popular',
+  sorting: DEFAULT_SORTING,
   isLoading: false,
 };
 

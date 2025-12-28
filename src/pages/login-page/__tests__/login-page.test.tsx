@@ -130,7 +130,7 @@ describe('LoginPage', () => {
     await user.click(submitButton);
 
     const loginCalls = dispatchSpy.mock.calls.filter(
-      (call) => call[0].type === 'user/login/pending'
+      (call) => 'type' in call[0] && call[0].type === 'user/login/pending'
     );
     expect(loginCalls.length).toBe(0);
   });
@@ -153,7 +153,7 @@ describe('LoginPage', () => {
     await user.click(submitButton);
 
     const loginCalls = dispatchSpy.mock.calls.filter(
-      (call) => call[0].type === 'user/login/pending'
+      (call) => 'type' in call[0] && call[0].type === 'user/login/pending'
     );
     expect(loginCalls.length).toBe(0);
   });

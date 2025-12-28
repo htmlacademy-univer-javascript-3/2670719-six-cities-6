@@ -30,6 +30,7 @@ const createMockStore = (authorizationStatus: string = 'NO_AUTH', city: string =
     },
     favorites: {
       favoriteOffers: Array(favoriteCount).fill(null) as unknown as Offer[],
+      isLoading: false,
     },
   },
 });

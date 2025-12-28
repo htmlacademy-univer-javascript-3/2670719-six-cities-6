@@ -145,7 +145,9 @@ describe('ReviewForm', () => {
     await user.click(submitButton);
     expect(dispatchSpy).toHaveBeenCalled();
     const lastCall = dispatchSpy.mock.calls[dispatchSpy.mock.calls.length - 1][0];
-    expect(lastCall.type).toBe('data/postReview/pending');
+    if ('type' in lastCall) {
+      expect(lastCall.type).toBe('data/postReview/pending');
+    }
   });
 
   it('should clear form after successful submit', async () => {

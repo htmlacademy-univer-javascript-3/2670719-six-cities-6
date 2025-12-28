@@ -43,3 +43,17 @@ export const OFFER_CARD_BOOKMARK_ICON_HEIGHT = 19;
 export const REQUEST_TIMEOUT = 5000; // milliseconds
 export const UNAUTHORIZED_STATUS_CODE = 401;
 
+// Cities constants
+export const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+
+// Sorting constants
+export const SORT_OPTIONS = [
+  'Popular',
+  'Price: low to high',
+  'Price: high to low',
+  'Top rated first',
+];
+
+export const DEFAULT_CITY = 'Paris';
+export const DEFAULT_SORTING = 'Popular';
+

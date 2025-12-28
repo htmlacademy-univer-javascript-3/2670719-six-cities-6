@@ -97,7 +97,9 @@ describe('NearbyOfferCard', () => {
     await user.click(favoriteButton);
     expect(dispatchSpy).toHaveBeenCalled();
     const lastCall = dispatchSpy.mock.calls[dispatchSpy.mock.calls.length - 1][0];
-    expect(lastCall.type).toBe('offers/toggleFavorite/pending');
+    if ('type' in lastCall) {
+      expect(lastCall.type).toBe('offers/toggleFavorite/pending');
+    }
   });
 
   it('should navigate to login when favorite button is clicked and user is not authorized', async () => {

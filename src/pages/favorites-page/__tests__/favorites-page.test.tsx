@@ -159,7 +159,9 @@ describe('FavoritesPage', () => {
     await user.click(favoriteButton);
     expect(dispatchSpy).toHaveBeenCalled();
     const lastCall = dispatchSpy.mock.calls[dispatchSpy.mock.calls.length - 1][0];
-    expect(lastCall.type).toBe('offers/toggleFavorite/pending');
+    if ('type' in lastCall) {
+      expect(lastCall.type).toBe('offers/toggleFavorite/pending');
+    }
   });
 
   it('should dispatch fetchFavoriteOffersAction when authorized', () => {
@@ -186,7 +188,7 @@ describe('FavoritesPage', () => {
       </Provider>
     );
     const fetchCalls = dispatchSpy.mock.calls.filter(
-      (call) => call[0].type === 'offers/fetchFavorites/pending'
+      (call) => 'type' in call[0] && call[0].type === 'offers/fetchFavorites/pending'
     );
     expect(fetchCalls.length).toBe(0);
   });

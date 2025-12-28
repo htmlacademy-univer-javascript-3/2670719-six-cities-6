@@ -2,13 +2,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeSorting } from '../../store/action';
 import { selectSorting } from '../../store/selectors';
-
-const SORT_OPTIONS = [
-  'Popular',
-  'Price: low to high',
-  'Price: high to low',
-  'Top rated first',
-] as const;
+import { SORT_OPTIONS } from '../../constants/constants';
 
 function SortOptions(): JSX.Element {
   const dispatch = useDispatch();

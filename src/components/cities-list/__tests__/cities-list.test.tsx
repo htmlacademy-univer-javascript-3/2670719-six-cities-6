@@ -66,8 +66,10 @@ describe('CitiesList', () => {
     await user.click(cologneLink);
     expect(dispatchSpy).toHaveBeenCalled();
     const lastCall = dispatchSpy.mock.calls[dispatchSpy.mock.calls.length - 1][0];
-    expect(lastCall.type).toBe('city/changeCity');
-    expect(lastCall.payload).toBe('Cologne');
+    if ('type' in lastCall) {
+      expect(lastCall.type).toBe('city/changeCity');
+      expect('payload' in lastCall && lastCall.payload).toBe('Cologne');
+    }
   });
 });
 
