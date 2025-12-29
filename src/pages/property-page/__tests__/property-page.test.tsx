@@ -185,7 +185,7 @@ describe('PropertyPage', () => {
         </MemoryRouter>
       </Provider>
     );
-    const images = screen.getAllByAltText('Photo studio');
+    const images = screen.getAllByAltText('Test Offer');
     expect(images.length).toBeLessThanOrEqual(6);
   });
 
@@ -227,7 +227,7 @@ describe('PropertyPage', () => {
     );
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('Pro')).toBeInTheDocument();
-    expect(screen.getByText('Test description')).toBeInTheDocument();
+    expect(screen.getByText(/Test description/)).toBeInTheDocument();
   });
 
   it('should render reviews list', () => {
@@ -341,7 +341,7 @@ describe('PropertyPage', () => {
       </Provider>
     );
     const favoriteButton = screen.getByRole('button', { name: /In bookmarks/i });
-    expect(favoriteButton).toHaveClass('property__bookmark-button--active');
+    expect(favoriteButton).toHaveClass('offer__bookmark-button--active');
   });
 
   it('should render Map component with nearby offers', () => {
@@ -353,7 +353,7 @@ describe('PropertyPage', () => {
         </MemoryRouter>
       </Provider>
     );
-    const mapContainer = container.querySelector('.property__map');
+    const mapContainer = container.querySelector('.offer__map');
     expect(mapContainer).toBeInTheDocument();
   });
 });
