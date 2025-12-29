@@ -149,7 +149,8 @@ describe('Map', () => {
     );
     unmount();
     const mockedLeaflet = vi.mocked(leaflet);
-    const mapInstance = mockedLeaflet.map.mock.results[0]?.value;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const mapInstance = mockedLeaflet.map.mock.results[0]?.value as { remove: ReturnType<typeof vi.fn> } | undefined;
     expect(mapInstance?.remove).toHaveBeenCalled();
   });
 });
