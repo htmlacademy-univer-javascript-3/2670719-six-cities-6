@@ -128,11 +128,7 @@ const createMockStore = (
       }).concat(mockMiddleware),
   });
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore - store type compatibility issue with middleware
-  storeRef = store;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore - store type compatibility issue with middleware
+  storeRef = store as ReturnType<typeof configureStore>;
   return store;
 };
 

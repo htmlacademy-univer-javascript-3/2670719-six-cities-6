@@ -155,7 +155,7 @@ describe('Map', () => {
     );
     unmount();
     const mockedLeaflet = vi.mocked(leaflet);
-    const mapMock = mockedLeaflet.map as ReturnType<typeof vi.fn<[], MockMapInstance>>;
+    const mapMock = mockedLeaflet.map;
     const firstCall = mapMock.mock.results[0];
     if (firstCall && 'value' in firstCall) {
       const mapInstance = firstCall.value as MockMapInstance;
