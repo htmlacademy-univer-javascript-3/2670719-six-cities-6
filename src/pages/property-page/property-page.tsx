@@ -41,14 +41,15 @@ function PropertyPage(): JSX.Element {
   const favoriteOffers = useSelector(selectFavoriteOffers);
 
   const handleFavoriteClick = useCallback(() => {
+    if (!id || !currentOffer) {
+      return;
+    }
     if (authorizationStatus !== 'AUTH') {
       navigate('/login');
       return;
     }
-    if (currentOffer) {
-      dispatch(toggleFavoriteAction({ offerId: currentOffer.id, isFavorite: !currentOffer.isFavorite }));
-    }
-  }, [authorizationStatus, currentOffer, dispatch, navigate]);
+    dispatch(toggleFavoriteAction({ offerId: currentOffer.id, isFavorite: !currentOffer.isFavorite }));
+  }, [authorizationStatus, currentOffer, dispatch, id, navigate]);
 
   const handleLogout = useCallback((evt: React.MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
@@ -119,71 +120,74 @@ function PropertyPage(): JSX.Element {
         </div>
       </header>
 
-      <main className="page__main page__main--property">
-        <section className="property">
-          <div className="property__gallery-container container">
-            <div className="property__gallery">
+      <main className="page__main page__main--offer">
+        <section className="offer">
+          <div className="offer__gallery-container container">
+            <div className="offer__gallery">
               {currentOffer.images?.slice(0, MAX_PROPERTY_IMAGES).map((image) => (
-                <div key={image} className="property__image-wrapper">
-                  <img className="property__image" src={image} alt="Photo studio" />
+                <div key={image} className="offer__image-wrapper">
+                  <img className="offer__image" src={image} alt={currentOffer.title} />
                 </div>
               ))}
             </div>
           </div>
-          <div className="property__container container">
-            <div className="property__wrapper">
+          <div className="offer__container container">
+            <div className="offer__wrapper">
               {currentOffer.isPremium && (
-                <div className="property__mark">
+                <div className="offer__mark">
                   <span>Premium</span>
                 </div>
               )}
-              <div className="property__name-wrapper">
-                <h1 className="property__name">
+              <div className="offer__name-wrapper">
+                <h1 className="offer__name">
                   {currentOffer.title}
                 </h1>
                 <button
-                  className={`property__bookmark-button ${currentOffer.isFavorite ? 'property__bookmark-button--active' : ''} button`}
+                  className={`offer__bookmark-button ${currentOffer.isFavorite ? 'offer__bookmark-button--active' : ''} button`}
                   type="button"
                   onClick={handleFavoriteClick}
                 >
-                  <svg className="property__bookmark-icon" width={BOOKMARK_ICON_WIDTH} height={BOOKMARK_ICON_HEIGHT}>
+                  <svg className="offer__bookmark-icon" width={BOOKMARK_ICON_WIDTH} height={BOOKMARK_ICON_HEIGHT}>
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
                   <span className="visually-hidden">{currentOffer.isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
                 </button>
               </div>
-              <div className="property__rating rating">
-                <div className="property__stars rating__stars">
+              <div className="offer__rating rating">
+                <div className="offer__stars rating__stars">
                   <span style={{width: `${Math.round(currentOffer.rating) * RATING_WIDTH_MULTIPLIER}%`}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="property__rating-value rating__value">{currentOffer.rating}</span>
+                <span className="offer__rating-value rating__value">{currentOffer.rating}</span>
               </div>
-              <ul className="property__features">
-                <li className="property__feature property__feature--entire">
-                  {currentOffer.type.charAt(0).toUpperCase() + currentOffer.type.slice(1)}
+              <ul className="offer__features">
+                <li className="offer__feature offer__feature--entire">
+                  {currentOffer.type === 'apartment' && 'Apartment'}
+                  {currentOffer.type === 'room' && 'Room'}
+                  {currentOffer.type === 'house' && 'House'}
+                  {currentOffer.type === 'hotel' && 'Hotel'}
                 </li>
-                {currentOffer.bedrooms && (
-                  <li className="property__feature property__feature--bedrooms">
+                {currentOffer.bedrooms !== undefined && (
+                  <li className="offer__feature offer__feature--bedrooms">
                     {currentOffer.bedrooms} {currentOffer.bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
                   </li>
                 )}
-                {currentOffer.maxAdults && (
-                  <li className="property__feature property__feature--adults">
+                {currentOffer.maxAdults !== undefined && (
+                  <li className="offer__feature offer__feature--adults">
                     Max {currentOffer.maxAdults} {currentOffer.maxAdults === 1 ? 'adult' : 'adults'}
                   </li>
                 )}
               </ul>
-              <div className="property__price">
-                <b className="property__price-value">&euro;{currentOffer.price}</b>
-                <span className="property__price-text">&nbsp;night</span>
+              <div className="offer__price">
+                <b className="offer__price-value">&euro;{currentOffer.price}</b>
+                <span className="offer__price-text">&nbsp;night</span>
               </div>
               {currentOffer.goods && currentOffer.goods.length > 0 && (
-                <div className="property__inside">
-                  <h2 className="property__inside-title">What&apos;s inside</h2>
-                  <ul className="property__inside-list">
+                <div className="offer__inside">
+                  <h2 className="offer__inside-title">What&apos;s inside</h2>
+                  <ul className="offer__inside-list">
                     {currentOffer.goods.map((good) => (
-                      <li key={good} className="property__inside-item">
+                      <li key={good} className="offer__inside-item">
                         {good}
                       </li>
                     ))}
@@ -191,39 +195,37 @@ function PropertyPage(): JSX.Element {
                 </div>
               )}
               {currentOffer.host && (
-                <div className="property__host">
-                  <h2 className="property__host-title">Meet the host</h2>
-                  <div className="property__host-user user">
-                    <div className={`property__avatar-wrapper ${currentOffer.host.isPro ? 'property__avatar-wrapper--pro' : ''} user__avatar-wrapper`}>
-                      <img className="property__avatar user__avatar" src={currentOffer.host.avatarUrl} width={AVATAR_SIZE_HOST} height={AVATAR_SIZE_HOST} alt="Host avatar" />
+                <div className="offer__host">
+                  <h2 className="offer__host-title">Meet the host</h2>
+                  <div className="offer__host-user user">
+                    <div className={`offer__avatar-wrapper ${currentOffer.host.isPro ? 'offer__avatar-wrapper--pro' : ''} user__avatar-wrapper`}>
+                      <img className="offer__avatar user__avatar" src={currentOffer.host.avatarUrl} width={AVATAR_SIZE_HOST} height={AVATAR_SIZE_HOST} alt="Host avatar" />
                     </div>
-                    <span className="property__user-name">
+                    <span className="offer__user-name">
                       {currentOffer.host.name}
                     </span>
                     {currentOffer.host.isPro && (
-                      <span className="property__user-status">
+                      <span className="offer__user-status">
                         Pro
                       </span>
                     )}
                   </div>
                   {currentOffer.description && (
-                    <div className="property__description">
-                      {currentOffer.description.split('\n').map((paragraph) => (
-                        <p key={paragraph} className="property__text">
-                          {paragraph}
-                        </p>
-                      ))}
+                    <div className="offer__description">
+                      <p className="offer__text">
+                        {currentOffer.description}
+                      </p>
                     </div>
                   )}
                 </div>
               )}
-              <section className="property__reviews reviews">
+              <section className="offer__reviews reviews">
                 <ReviewsList reviews={reviews} />
                 {authorizationStatus === 'AUTH' && <ReviewForm offerId={id || ''} />}
               </section>
             </div>
           </div>
-          <section className="property__map map">
+          <section className="offer__map map">
             <Map city={city} offers={[...nearbyOffers.slice(0, 3), currentOffer]} selectedOfferId={currentOffer.id} />
           </section>
         </section>
