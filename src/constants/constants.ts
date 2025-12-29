@@ -5,6 +5,7 @@ export const MAX_RATING = 5;
 export const MIN_RATING = 1;
 export const RATING_STAR_WIDTH = 37;
 export const RATING_STAR_HEIGHT = 33;
+export const MAX_REVIEWS_DISPLAY = 10;
 
 // Rating calculation constants
 export const RATING_WIDTH_MULTIPLIER = 20; // Used for calculating star width percentage (rating * 20%)

@@ -19,128 +19,151 @@ type ReviewFormProps = {
 function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
   const [rating, setRating] = useState('');
   const [review, setReview] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const isReviewPosting = useSelector(selectIsReviewPosting);
 
   const handleRatingChange = useCallback((evt: ChangeEvent<HTMLInputElement>) => {
     setRating(evt.target.value);
+    setError(null);
   }, []);
 
   const handleReviewChange = useCallback((evt: ChangeEvent<HTMLTextAreaElement>) => {
     setReview(evt.target.value);
+    setError(null);
   }, []);
 
   const handleSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (rating && review.length >= REVIEW_MIN_LENGTH && review.length <= REVIEW_MAX_LENGTH) {
+    if (rating && review.length >= REVIEW_MIN_LENGTH && review.length <= REVIEW_MAX_LENGTH && !isReviewPosting) {
+      setError(null);
       dispatch(postReviewAction({
         offerId,
         reviewData: {
           comment: review,
           rating: Number(rating),
         },
-      })).then(() => {
-        setRating('');
-        setReview('');
-      });
+      }))
+        .unwrap()
+        .then(() => {
+          setRating('');
+          setReview('');
+          setError(null);
+        })
+        .catch((err) => {
+          setError(err || 'Failed to submit review. Please try again.');
+        });
     }
-  }, [rating, review, offerId, dispatch]);
+  }, [rating, review, offerId, dispatch, isReviewPosting]);
 
   const isSubmitDisabled = !rating || review.length < REVIEW_MIN_LENGTH || review.length > REVIEW_MAX_LENGTH || isReviewPosting;
 
   return (
     <form className="reviews__form form" action="#" method="post" onSubmit={handleSubmit}>
-      <label className="reviews__label form__label" htmlFor="review">Your review</label>
-      <div className="reviews__rating-form form__rating">
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value={MAX_RATING}
-          id={`${MAX_RATING}-stars`}
-          type="radio"
-          checked={rating === String(MAX_RATING)}
-          onChange={handleRatingChange}
-        />
-        <label htmlFor={`${MAX_RATING}-stars`} className="reviews__rating-label form__rating-label" title="perfect">
-          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
+      <fieldset disabled={isReviewPosting}>
+        <label className="reviews__label form__label" htmlFor="review">Your review</label>
+        <div className="reviews__rating-form form__rating">
+          <input
+            className="form__rating-input visually-hidden"
+            name="rating"
+            value={MAX_RATING}
+            id={`${MAX_RATING}-stars`}
+            type="radio"
+            checked={rating === String(MAX_RATING)}
+            onChange={handleRatingChange}
+            disabled={isReviewPosting}
+          />
+          <label htmlFor={`${MAX_RATING}-stars`} className="reviews__rating-label form__rating-label" title="perfect">
+            <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
+              <use xlinkHref="#icon-star"></use>
+            </svg>
+          </label>
 
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value="4"
-          id="4-stars"
-          type="radio"
-          checked={rating === '4'}
-          onChange={handleRatingChange}
-        />
-        <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
-          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
+          <input
+            className="form__rating-input visually-hidden"
+            name="rating"
+            value="4"
+            id="4-stars"
+            type="radio"
+            checked={rating === '4'}
+            onChange={handleRatingChange}
+            disabled={isReviewPosting}
+          />
+          <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
+            <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
+              <use xlinkHref="#icon-star"></use>
+            </svg>
+          </label>
 
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value="3"
-          id="3-stars"
-          type="radio"
-          checked={rating === '3'}
-          onChange={handleRatingChange}
-        />
-        <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
-          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
+          <input
+            className="form__rating-input visually-hidden"
+            name="rating"
+            value="3"
+            id="3-stars"
+            type="radio"
+            checked={rating === '3'}
+            onChange={handleRatingChange}
+            disabled={isReviewPosting}
+          />
+          <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
+            <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
+              <use xlinkHref="#icon-star"></use>
+            </svg>
+          </label>
 
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value="2"
-          id="2-stars"
-          type="radio"
-          checked={rating === '2'}
-          onChange={handleRatingChange}
-        />
-        <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
-          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
+          <input
+            className="form__rating-input visually-hidden"
+            name="rating"
+            value="2"
+            id="2-stars"
+            type="radio"
+            checked={rating === '2'}
+            onChange={handleRatingChange}
+            disabled={isReviewPosting}
+          />
+          <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
+            <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
+              <use xlinkHref="#icon-star"></use>
+            </svg>
+          </label>
 
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value={MIN_RATING}
-          id={`${MIN_RATING}-star`}
-          type="radio"
-          checked={rating === String(MIN_RATING)}
-          onChange={handleRatingChange}
+          <input
+            className="form__rating-input visually-hidden"
+            name="rating"
+            value={MIN_RATING}
+            id={`${MIN_RATING}-star`}
+            type="radio"
+            checked={rating === String(MIN_RATING)}
+            onChange={handleRatingChange}
+            disabled={isReviewPosting}
+          />
+          <label htmlFor={`${MIN_RATING}-star`} className="reviews__rating-label form__rating-label" title="terribly">
+            <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
+              <use xlinkHref="#icon-star"></use>
+            </svg>
+          </label>
+        </div>
+        <textarea
+          className="reviews__textarea form__textarea"
+          id="review"
+          name="review"
+          placeholder="Tell how was your stay, what you like and what can be improved"
+          value={review}
+          onChange={handleReviewChange}
+          disabled={isReviewPosting}
         />
-        <label htmlFor={`${MIN_RATING}-star`} className="reviews__rating-label form__rating-label" title="terribly">
-          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
-      </div>
-      <textarea
-        className="reviews__textarea form__textarea"
-        id="review"
-        name="review"
-        placeholder="Tell how was your stay, what you like and what can be improved"
-        value={review}
-        onChange={handleReviewChange}
-      />
-      <div className="reviews__button-wrapper">
-        <p className="reviews__help">
-          To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">{REVIEW_MIN_LENGTH} characters</b>.
-        </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={isSubmitDisabled}>Submit</button>
-      </div>
+        {error && (
+          <div className="reviews__error" style={{ color: 'red', marginTop: '10px', marginBottom: '10px' }}>
+            {error}
+          </div>
+        )}
+        <div className="reviews__button-wrapper">
+          <p className="reviews__help">
+            To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">{REVIEW_MIN_LENGTH} characters</b>.
+          </p>
+          <button className="reviews__submit form__submit button" type="submit" disabled={isSubmitDisabled}>Submit</button>
+        </div>
+      </fieldset>
     </form>
   );
 }
