@@ -55,8 +55,8 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
         },
       }))
         .unwrap()
-        .catch((err) => {
-          setError(err || 'Failed to submit review. Please try again.');
+        .catch((err: unknown) => {
+          setError(err instanceof Error ? err.message : typeof err === 'string' ? err : 'Failed to submit review. Please try again.');
         });
     }
   }, [rating, review, offerId, dispatch, isReviewPosting]);
