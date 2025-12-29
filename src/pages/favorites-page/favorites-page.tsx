@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../../store/action';
-import { fetchFavoriteOffersAction, toggleFavoriteAction } from '../../store/thunk';
+import { fetchFavoriteOffersAction, toggleFavoriteAction } from '../../store/thunk/thunk';
 import { AppDispatch } from '../../store';
 import { selectFavoriteOffers, selectIsFavoritesLoading, selectAuthorizationStatus, selectUser } from '../../store/selectors';
 import type { Offer } from '../../types/offer';

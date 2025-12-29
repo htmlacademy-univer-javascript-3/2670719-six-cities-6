@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import type { Offer } from '../types/offer';
-import type { AuthInfo, LoginData } from '../types/auth';
-import type { Review, ReviewData } from '../types/review';
+import type { Offer } from '../../types/offer';
+import type { AuthInfo, LoginData } from '../../types/auth';
+import type { Review, ReviewData } from '../../types/review';
 
 export const fetchOffersAction = createAsyncThunk<
   Offer[],

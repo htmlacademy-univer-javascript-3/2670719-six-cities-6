@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fetchOffersAction, fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, postReviewAction, toggleFavoriteAction, fetchFavoriteOffersAction } from '../../thunk';
+import { fetchOffersAction, fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, postReviewAction, toggleFavoriteAction, fetchFavoriteOffersAction } from '../thunk';
 
 describe('Async thunks', () => {
   it('should have correct action types', () => {

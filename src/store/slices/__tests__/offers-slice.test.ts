@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { offersReducer } from '../offers-slice';
 import { changeCity, changeSorting } from '../../action';
-import { fetchOffersAction, toggleFavoriteAction } from '../../thunk';
+import { fetchOffersAction, toggleFavoriteAction } from '../../thunk/thunk';
 import type { Offer } from '../../../types/offer';
 
 const mockOffer: Offer = {

@@ -1,7 +1,7 @@
 import { FormEvent, useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { loginAction, fetchFavoriteOffersAction } from '../../store/thunk';
+import { loginAction, fetchFavoriteOffersAction } from '../../store/thunk/thunk';
 import { changeCity } from '../../store/action';
 import { AppDispatch } from '../../store';
 import { selectAuthorizationStatus } from '../../store/selectors';

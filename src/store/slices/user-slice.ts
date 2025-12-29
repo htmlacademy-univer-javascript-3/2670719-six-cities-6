@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { requireAuthorization, logoutAction } from '../action';
-import { checkAuthAction, loginAction } from '../thunk';
+import { checkAuthAction, loginAction } from '../thunk/thunk';
 
 type UserState = {
   authorizationStatus: string;

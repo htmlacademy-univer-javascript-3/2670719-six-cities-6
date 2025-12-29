@@ -1,6 +1,6 @@
 import { useState, FormEvent, ChangeEvent, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { postReviewAction } from '../../store/thunk';
+import { postReviewAction } from '../../store/thunk/thunk';
 import { AppDispatch } from '../../store';
 import { selectIsReviewPosting } from '../../store/selectors';
 import {

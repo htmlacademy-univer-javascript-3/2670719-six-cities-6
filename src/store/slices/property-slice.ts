@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { logoutAction } from '../action';
-import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, postReviewAction, toggleFavoriteAction, fetchFavoriteOffersAction } from '../thunk';
+import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, postReviewAction, toggleFavoriteAction, fetchFavoriteOffersAction } from '../thunk/thunk';
 import type { Offer } from '../../types/offer';
 import type { Review } from '../../types/review';
 

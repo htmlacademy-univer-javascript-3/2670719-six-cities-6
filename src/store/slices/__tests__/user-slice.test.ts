@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { userReducer } from '../user-slice';
 import { requireAuthorization, logoutAction } from '../../action';
-import { checkAuthAction, loginAction } from '../../thunk';
+import { checkAuthAction, loginAction } from '../../thunk/thunk';
 import type { AuthInfo } from '../../../types/auth';
 
 const mockAuthInfo: AuthInfo = {

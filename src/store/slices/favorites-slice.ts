@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { logoutAction } from '../action';
-import { fetchFavoriteOffersAction, toggleFavoriteAction } from '../thunk';
+import { fetchFavoriteOffersAction, toggleFavoriteAction } from '../thunk/thunk';
 import type { Offer } from '../../types/offer';
 
 type FavoritesState = {

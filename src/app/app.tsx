@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import MainPage from './pages/main-page/main-page';
-import LoginPage from './pages/login-page/login-page';
-import FavoritesPage from './pages/favorites-page/favorites-page';
-import PropertyPage from './pages/property-page/property-page';
-import NotFoundPage from './pages/not-found-page/not-found-page';
-import PrivateRoute from './components/private-route/private-route';
+import MainPage from '../pages/main-page/main-page';
+import LoginPage from '../pages/login-page/login-page';
+import FavoritesPage from '../pages/favorites-page/favorites-page';
+import PropertyPage from '../pages/property-page/property-page';
+import NotFoundPage from '../pages/not-found-page/not-found-page';
+import PrivateRoute from '../components/private-route/private-route';
 
 function App(): JSX.Element {
   return (

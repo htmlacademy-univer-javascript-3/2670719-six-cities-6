@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFavoriteAction } from '../../store/thunk';
+import { toggleFavoriteAction } from '../../store/thunk/thunk';
 import { AppDispatch } from '../../store';
 import { selectAuthorizationStatus } from '../../store/selectors';
 import type { Offer } from '../../types/offer';

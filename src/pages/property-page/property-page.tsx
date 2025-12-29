@@ -8,7 +8,7 @@ import Map from '../../components/map/map';
 import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
 import Spinner from '../../components/spinner/spinner';
 import { AppDispatch } from '../../store';
-import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, toggleFavoriteAction } from '../../store/thunk';
+import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, toggleFavoriteAction } from '../../store/thunk/thunk';
 import {
   selectCurrentOffer,
   selectNearbyOffers,

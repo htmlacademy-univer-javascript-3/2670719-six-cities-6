@@ -9,7 +9,7 @@ import { offersReducer } from '../../../store/slices/offers-slice';
 import { userReducer } from '../../../store/slices/user-slice';
 import { propertyReducer } from '../../../store/slices/property-slice';
 import { favoritesReducer } from '../../../store/slices/favorites-slice';
-import { fetchFavoriteOffersAction } from '../../../store/thunk';
+import { fetchFavoriteOffersAction } from '../../../store/thunk/thunk';
 import type { Offer } from '../../../types/offer';
 
 const mockOffer1: Offer = {

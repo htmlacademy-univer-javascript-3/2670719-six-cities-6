@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { favoritesReducer } from '../favorites-slice';
-import { fetchFavoriteOffersAction, toggleFavoriteAction } from '../../thunk';
+import { fetchFavoriteOffersAction, toggleFavoriteAction } from '../../thunk/thunk';
 import type { Offer } from '../../../types/offer';
 
 const mockOffer: Offer = {

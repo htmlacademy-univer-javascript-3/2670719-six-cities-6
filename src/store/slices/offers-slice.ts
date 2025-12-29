@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { changeCity, changeSorting, logoutAction } from '../action';
-import { fetchOffersAction, toggleFavoriteAction, fetchFavoriteOffersAction } from '../thunk';
+import { fetchOffersAction, toggleFavoriteAction, fetchFavoriteOffersAction } from '../thunk/thunk';
 import { DEFAULT_CITY, DEFAULT_SORTING } from '../../constants/constants';
 import type { Offer } from '../../types/offer';
 

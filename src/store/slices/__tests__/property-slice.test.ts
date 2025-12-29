@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { propertyReducer } from '../property-slice';
-import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, postReviewAction, toggleFavoriteAction } from '../../thunk';
+import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, postReviewAction, toggleFavoriteAction } from '../../thunk/thunk';
 import type { Offer } from '../../../types/offer';
 import type { Review } from '../../../types/review';
 
