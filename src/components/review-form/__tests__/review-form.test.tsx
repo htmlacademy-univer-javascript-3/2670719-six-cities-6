@@ -60,7 +60,7 @@ const createMockStore = (isReviewPosting: boolean = false, autoResolve: boolean 
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(mockMiddleware),
   });
 
-  storeRef = store;
+  storeRef = store as ReturnType<typeof configureStore>;
   return store;
 };
 
