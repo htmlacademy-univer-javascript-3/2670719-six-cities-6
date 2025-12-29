@@ -5,6 +5,13 @@ import { toggleFavoriteAction } from '../../store/thunk';
 import { AppDispatch } from '../../store';
 import { selectAuthorizationStatus } from '../../store/selectors';
 import type { Offer } from '../../types/offer';
+import {
+  RATING_WIDTH_MULTIPLIER,
+  OFFER_CARD_IMAGE_WIDTH,
+  OFFER_CARD_IMAGE_HEIGHT,
+  OFFER_CARD_BOOKMARK_ICON_WIDTH,
+  OFFER_CARD_BOOKMARK_ICON_HEIGHT,
+} from '../../constants/constants';
 
 type NearbyOfferCardProps = {
   offer: Offer;
@@ -32,7 +39,7 @@ const NearbyOfferCard = memo(({offer}: NearbyOfferCardProps): JSX.Element => {
       )}
       <div className="near-places__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${offer.id}`}>
-          <img className="place-card__image" src={offer.previewImage} width="260" height="200" alt="Place image" />
+          <img className="place-card__image" src={offer.previewImage} width={OFFER_CARD_IMAGE_WIDTH} height={OFFER_CARD_IMAGE_HEIGHT} alt="Place image" />
         </Link>
       </div>
       <div className="place-card__info">
@@ -46,7 +53,7 @@ const NearbyOfferCard = memo(({offer}: NearbyOfferCardProps): JSX.Element => {
             type="button"
             onClick={handleFavoriteClick}
           >
-            <svg className="place-card__bookmark-icon" width="18" height="19">
+            <svg className="place-card__bookmark-icon" width={OFFER_CARD_BOOKMARK_ICON_WIDTH} height={OFFER_CARD_BOOKMARK_ICON_HEIGHT}>
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
             <span className="visually-hidden">{offer.isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
@@ -54,7 +61,7 @@ const NearbyOfferCard = memo(({offer}: NearbyOfferCardProps): JSX.Element => {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `${offer.rating * 20}%`}}></span>
+            <span style={{width: `${offer.rating * RATING_WIDTH_MULTIPLIER}%`}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

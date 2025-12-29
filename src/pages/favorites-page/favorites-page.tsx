@@ -5,7 +5,8 @@ import { fetchFavoriteOffersAction, toggleFavoriteAction } from '../../store/thu
 import { AppDispatch } from '../../store';
 import { selectFavoriteOffers, selectIsFavoritesLoading, selectAuthorizationStatus, selectUser } from '../../store/selectors';
 import type { Offer } from '../../types/offer';
-import Spinner from '../spinner/spinner';
+import Spinner from '../../components/spinner/spinner';
+import { RATING_WIDTH_MULTIPLIER } from '../../constants/constants';
 
 function FavoritesPage(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>();
@@ -123,7 +124,7 @@ function FavoritesPage(): JSX.Element {
                             </div>
                             <div className="place-card__rating rating">
                               <div className="place-card__stars rating__stars">
-                                <span style={{width: `${offer.rating * 20}%`}}></span>
+                                <span style={{width: `${offer.rating * RATING_WIDTH_MULTIPLIER}%`}}></span>
                                 <span className="visually-hidden">Rating</span>
                               </div>
                             </div>

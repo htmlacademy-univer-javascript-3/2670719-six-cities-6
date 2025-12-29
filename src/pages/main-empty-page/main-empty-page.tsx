@@ -1,51 +1,18 @@
-import { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import OffersList from '../offers-list/offers-list';
-import Map from '../map/map';
-import CitiesList from '../cities-list/cities-list';
-import SortOptions from '../sort-options/sort-options';
-import Spinner from '../spinner/spinner';
-import MainEmptyPage from '../main-empty-page/main-empty-page';
+import { useSelector } from 'react-redux';
+import CitiesList from '../../components/cities-list/cities-list';
 import {
-  selectIsLoading,
-  selectSortedOffers,
-  selectCityFromOffers,
+  selectCity,
   selectAuthorizationStatus,
   selectUser,
   selectFavoriteOffers,
-  selectCity,
 } from '../../store/selectors';
 
-function MainPage(): JSX.Element {
-  const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
-  const isLoading = useSelector(selectIsLoading);
-  const offers = useSelector(selectSortedOffers);
-  const city = useSelector(selectCityFromOffers);
+function MainEmptyPage(): JSX.Element {
   const currentCity = useSelector(selectCity);
   const authorizationStatus = useSelector(selectAuthorizationStatus);
   const user = useSelector(selectUser);
   const favoriteOffers = useSelector(selectFavoriteOffers);
-
-  const handleCardMouseEnter = useCallback((id: string) => {
-    setSelectedOfferId(id);
-  }, []);
-
-  const handleCardMouseLeave = useCallback(() => {
-    setSelectedOfferId(null);
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="page page--gray page--main">
-        <Spinner />
-      </div>
-    );
-  }
-
-  if (offers.length === 0) {
-    return <MainEmptyPage />;
-  }
 
   return (
     <div className="page page--gray page--main">
@@ -88,24 +55,20 @@ function MainPage(): JSX.Element {
         </div>
       </header>
 
-      <main className="page__main page__main--index">
+      <main className="page__main page__main--index page__main--index-empty">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <CitiesList />
         </div>
         <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offers.length} places to stay in {currentCity}</b>
-              <SortOptions />
-              <OffersList offers={offers} onCardMouseEnter={handleCardMouseEnter} onCardMouseLeave={handleCardMouseLeave} />
+          <div className="cities__places-container cities__places-container--empty container">
+            <section className="cities__no-places">
+              <div className="cities__status-wrapper tabs__content">
+                <b className="cities__status">No places to stay available</b>
+                <p className="cities__status-description">We could not find any property available at the moment in {currentCity}</p>
+              </div>
             </section>
-            <div className="cities__right-section">
-              <section className="cities__map map">
-                <Map city={city} offers={offers} selectedOfferId={selectedOfferId} />
-              </section>
-            </div>
+            <div className="cities__right-section"></div>
           </div>
         </div>
       </main>
@@ -113,5 +76,5 @@ function MainPage(): JSX.Element {
   );
 }
 
-export default MainPage;
+export default MainEmptyPage;
 

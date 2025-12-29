@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import ReviewsList from '../reviews-list';
 import type { Review } from '../../../types/review';
 
@@ -35,21 +35,33 @@ describe('ReviewsList', () => {
   });
 
   it('should display reviews count', () => {
-    const { container } = render(<ReviewsList reviews={mockReviews} />);
-    expect(container.querySelector('.reviews__title')).toBeInTheDocument();
-    expect(container.querySelector('.reviews__amount')?.textContent).toBe('2');
+    render(<ReviewsList reviews={mockReviews} />);
+    expect(screen.getByText(/Reviews/i)).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
   });
 
   it('should render all reviews', () => {
-    const { getByText } = render(<ReviewsList reviews={mockReviews} />);
-    expect(getByText('Test comment 1')).toBeInTheDocument();
-    expect(getByText('Test comment 2')).toBeInTheDocument();
+    render(<ReviewsList reviews={mockReviews} />);
+    expect(screen.getByText('Test comment 1')).toBeInTheDocument();
+    expect(screen.getByText('Test comment 2')).toBeInTheDocument();
+    expect(screen.getByText('Test User 1')).toBeInTheDocument();
+    expect(screen.getByText('Test User 2')).toBeInTheDocument();
   });
 
   it('should render empty list', () => {
-    const { container } = render(<ReviewsList reviews={[]} />);
-    expect(container.querySelector('.reviews__title')).toBeInTheDocument();
-    expect(container.querySelector('.reviews__amount')?.textContent).toBe('0');
+    render(<ReviewsList reviews={[]} />);
+    expect(screen.getByText(/Reviews/i)).toBeInTheDocument();
+    expect(screen.getByText('0')).toBeInTheDocument();
+    const reviewsList = screen.queryByRole('list');
+    expect(reviewsList).toBeInTheDocument();
+  });
+
+  it('should render reviews in a list', () => {
+    render(<ReviewsList reviews={mockReviews} />);
+    const reviewsList = screen.getByRole('list');
+    expect(reviewsList).toHaveClass('reviews__list');
+    const listItems = reviewsList.querySelectorAll('li');
+    expect(listItems.length).toBe(2);
   });
 });
 

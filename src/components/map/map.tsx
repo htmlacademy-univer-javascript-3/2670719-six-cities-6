@@ -2,6 +2,12 @@ import { useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Offer } from '../../types/offer';
+import {
+  MAP_ICON_WIDTH,
+  MAP_ICON_HEIGHT,
+  MAP_ICON_ANCHOR_X,
+  MAP_ICON_ANCHOR_Y,
+} from '../../constants/constants';
 
 type MapProps = {
   city: Offer['city'];
@@ -11,14 +17,14 @@ type MapProps = {
 
 const defaultCustomIcon = leaflet.icon({
   iconUrl: 'img/pin.svg',
-  iconSize: [27, 39],
-  iconAnchor: [13.5, 39],
+  iconSize: [MAP_ICON_WIDTH, MAP_ICON_HEIGHT],
+  iconAnchor: [MAP_ICON_ANCHOR_X, MAP_ICON_ANCHOR_Y],
 });
 
 const currentCustomIcon = leaflet.icon({
   iconUrl: 'img/pin-active.svg',
-  iconSize: [27, 39],
-  iconAnchor: [13.5, 39],
+  iconSize: [MAP_ICON_WIDTH, MAP_ICON_HEIGHT],
+  iconAnchor: [MAP_ICON_ANCHOR_X, MAP_ICON_ANCHOR_Y],
 });
 
 function Map({city, offers, selectedOfferId}: MapProps): JSX.Element {
@@ -57,7 +63,9 @@ function Map({city, offers, selectedOfferId}: MapProps): JSX.Element {
   useEffect(() => {
     if (map.current) {
       markersRef.current.forEach((marker) => {
-        marker.remove();
+        if (marker) {
+          marker.remove();
+        }
       });
       markersRef.current = [];
 

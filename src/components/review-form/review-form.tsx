@@ -3,6 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { postReviewAction } from '../../store/thunk';
 import { AppDispatch } from '../../store';
 import { selectIsReviewPosting } from '../../store/selectors';
+import {
+  REVIEW_MIN_LENGTH,
+  REVIEW_MAX_LENGTH,
+  MAX_RATING,
+  MIN_RATING,
+  RATING_STAR_WIDTH,
+  RATING_STAR_HEIGHT,
+} from '../../constants/constants';
 
 type ReviewFormProps = {
   offerId: string;
@@ -24,7 +32,7 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
 
   const handleSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (rating && review.length >= 50 && review.length <= 300) {
+    if (rating && review.length >= REVIEW_MIN_LENGTH && review.length <= REVIEW_MAX_LENGTH) {
       dispatch(postReviewAction({
         offerId,
         reviewData: {
@@ -38,7 +46,7 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
     }
   }, [rating, review, offerId, dispatch]);
 
-  const isSubmitDisabled = !rating || review.length < 50 || review.length > 300 || isReviewPosting;
+  const isSubmitDisabled = !rating || review.length < REVIEW_MIN_LENGTH || review.length > REVIEW_MAX_LENGTH || isReviewPosting;
 
   return (
     <form className="reviews__form form" action="#" method="post" onSubmit={handleSubmit}>
@@ -47,14 +55,14 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
         <input
           className="form__rating-input visually-hidden"
           name="rating"
-          value="5"
-          id="5-stars"
+          value={MAX_RATING}
+          id={`${MAX_RATING}-stars`}
           type="radio"
-          checked={rating === '5'}
+          checked={rating === String(MAX_RATING)}
           onChange={handleRatingChange}
         />
-        <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect">
-          <svg className="form__star-image" width="37" height="33">
+        <label htmlFor={`${MAX_RATING}-stars`} className="reviews__rating-label form__rating-label" title="perfect">
+          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
@@ -69,7 +77,7 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
           onChange={handleRatingChange}
         />
         <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
-          <svg className="form__star-image" width="37" height="33">
+          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
@@ -84,7 +92,7 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
           onChange={handleRatingChange}
         />
         <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
-          <svg className="form__star-image" width="37" height="33">
+          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
@@ -99,7 +107,7 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
           onChange={handleRatingChange}
         />
         <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
-          <svg className="form__star-image" width="37" height="33">
+          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
@@ -107,14 +115,14 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
         <input
           className="form__rating-input visually-hidden"
           name="rating"
-          value="1"
-          id="1-star"
+          value={MIN_RATING}
+          id={`${MIN_RATING}-star`}
           type="radio"
-          checked={rating === '1'}
+          checked={rating === String(MIN_RATING)}
           onChange={handleRatingChange}
         />
-        <label htmlFor="1-star" className="reviews__rating-label form__rating-label" title="terribly">
-          <svg className="form__star-image" width="37" height="33">
+        <label htmlFor={`${MIN_RATING}-star`} className="reviews__rating-label form__rating-label" title="terribly">
+          <svg className="form__star-image" width={RATING_STAR_WIDTH} height={RATING_STAR_HEIGHT}>
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
@@ -129,7 +137,7 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
-          To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
+          To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">{REVIEW_MIN_LENGTH} characters</b>.
         </p>
         <button className="reviews__submit form__submit button" type="submit" disabled={isSubmitDisabled}>Submit</button>
       </div>

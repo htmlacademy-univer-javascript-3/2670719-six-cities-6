@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { REQUEST_TIMEOUT, UNAUTHORIZED_STATUS_CODE } from '../constants/constants';
 
 const BACKEND_URL = 'https://15.design.htmlacademy.pro/six-cities';
-const REQUEST_TIMEOUT = 5000;
 
 const TOKEN_KEY_NAME = 'six-cities-token';
 
@@ -24,7 +24,7 @@ export const createAPI = () => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
-      if (error.response?.status === 401) {
+      if (error.response?.status === UNAUTHORIZED_STATUS_CODE) {
         // Обработка 401 - неавторизован
         localStorage.removeItem(TOKEN_KEY_NAME);
       }

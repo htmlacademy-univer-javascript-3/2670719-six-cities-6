@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import NotFoundPage from '../not-found-page';
 
@@ -14,22 +14,34 @@ describe('NotFoundPage', () => {
   });
 
   it('should display 404 message', () => {
-    const { getByText } = render(
+    render(
       <BrowserRouter>
         <NotFoundPage />
       </BrowserRouter>
     );
-    expect(getByText('404')).toBeInTheDocument();
-    expect(getByText('Page Not Found')).toBeInTheDocument();
+    expect(screen.getByText('404')).toBeInTheDocument();
+    expect(screen.getByText('Page Not Found')).toBeInTheDocument();
   });
 
   it('should display link to home page', () => {
-    const { getByText } = render(
+    render(
       <BrowserRouter>
         <NotFoundPage />
       </BrowserRouter>
     );
-    expect(getByText('Return to home page')).toBeInTheDocument();
+    const homeLink = screen.getByText('Return to home page');
+    expect(homeLink).toBeInTheDocument();
+    expect(homeLink.closest('a')).toHaveAttribute('href', '/');
+  });
+
+  it('should have correct page structure', () => {
+    render(
+      <BrowserRouter>
+        <NotFoundPage />
+      </BrowserRouter>
+    );
+    const page = screen.getByText('404').closest('.page');
+    expect(page).toBeInTheDocument();
   });
 });
 

@@ -1,11 +1,11 @@
 import { useEffect, useCallback } from 'react';
 import { Link, useParams, Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import ReviewForm from '../review-form/review-form';
-import ReviewsList from '../reviews-list/reviews-list';
-import Map from '../map/map';
-import NearbyOffersList from '../nearby-offers-list/nearby-offers-list';
-import Spinner from '../spinner/spinner';
+import ReviewForm from '../../components/review-form/review-form';
+import ReviewsList from '../../components/reviews-list/reviews-list';
+import Map from '../../components/map/map';
+import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
+import Spinner from '../../components/spinner/spinner';
 import { AppDispatch } from '../../store';
 import { fetchOfferAction, fetchNearbyOffersAction, fetchReviewsAction, toggleFavoriteAction } from '../../store/thunk';
 import {
@@ -15,6 +15,15 @@ import {
   selectIsOfferLoading,
   selectAuthorizationStatus,
 } from '../../store/selectors';
+import {
+  MAX_PROPERTY_IMAGES,
+  RATING_WIDTH_MULTIPLIER,
+  LOGO_WIDTH,
+  LOGO_HEIGHT,
+  BOOKMARK_ICON_WIDTH,
+  BOOKMARK_ICON_HEIGHT,
+  AVATAR_SIZE_HOST,
+} from '../../constants/constants';
 
 function PropertyPage(): JSX.Element {
   const { id } = useParams();
@@ -65,7 +74,7 @@ function PropertyPage(): JSX.Element {
           <div className="header__wrapper">
             <div className="header__left">
               <Link className="header__logo-link" to="/">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
+                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width={LOGO_WIDTH} height={LOGO_HEIGHT} />
               </Link>
             </div>
             <nav className="header__nav">
@@ -93,7 +102,7 @@ function PropertyPage(): JSX.Element {
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
-              {currentOffer.images?.slice(0, 6).map((image) => (
+              {currentOffer.images?.slice(0, MAX_PROPERTY_IMAGES).map((image) => (
                 <div key={image} className="property__image-wrapper">
                   <img className="property__image" src={image} alt="Photo studio" />
                 </div>
@@ -116,7 +125,7 @@ function PropertyPage(): JSX.Element {
                   type="button"
                   onClick={handleFavoriteClick}
                 >
-                  <svg className="property__bookmark-icon" width="31" height="33">
+                  <svg className="property__bookmark-icon" width={BOOKMARK_ICON_WIDTH} height={BOOKMARK_ICON_HEIGHT}>
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
                   <span className="visually-hidden">{currentOffer.isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
@@ -124,7 +133,7 @@ function PropertyPage(): JSX.Element {
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span style={{width: `${currentOffer.rating * 20}%`}}></span>
+                  <span style={{width: `${currentOffer.rating * RATING_WIDTH_MULTIPLIER}%`}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="property__rating-value rating__value">{currentOffer.rating}</span>
@@ -165,7 +174,7 @@ function PropertyPage(): JSX.Element {
                   <h2 className="property__host-title">Meet the host</h2>
                   <div className="property__host-user user">
                     <div className={`property__avatar-wrapper ${currentOffer.host.isPro ? 'property__avatar-wrapper--pro' : ''} user__avatar-wrapper`}>
-                      <img className="property__avatar user__avatar" src={currentOffer.host.avatarUrl} width="74" height="74" alt="Host avatar" />
+                      <img className="property__avatar user__avatar" src={currentOffer.host.avatarUrl} width={AVATAR_SIZE_HOST} height={AVATAR_SIZE_HOST} alt="Host avatar" />
                     </div>
                     <span className="property__user-name">
                       {currentOffer.host.name}
