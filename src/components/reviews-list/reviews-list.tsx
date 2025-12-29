@@ -12,7 +12,7 @@ function ReviewsList({reviews}: ReviewsListProps): JSX.Element {
     const sorted = [...reviews].sort((a, b) => {
       const dateA = new Date(a.date).getTime();
       const dateB = new Date(b.date).getTime();
-      return dateB - dateA; // Сортировка от новых к старым
+      return dateB - dateA;
     });
     return sorted.slice(0, MAX_REVIEWS_DISPLAY);
   }, [reviews]);

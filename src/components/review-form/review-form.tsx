@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent, useCallback } from 'react';
+import { useState, FormEvent, ChangeEvent, useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { postReviewAction } from '../../store/thunk/thunk';
 import { AppDispatch } from '../../store';
@@ -22,6 +22,7 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const isReviewPosting = useSelector(selectIsReviewPosting);
+  const prevIsReviewPosting = useRef(isReviewPosting);
 
   const handleRatingChange = useCallback((evt: ChangeEvent<HTMLInputElement>) => {
     setRating(evt.target.value);
@@ -32,6 +33,15 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
     setReview(evt.target.value);
     setError(null);
   }, []);
+
+  useEffect(() => {
+    if (prevIsReviewPosting.current && !isReviewPosting && rating && review) {
+      setRating('');
+      setReview('');
+      setError(null);
+    }
+    prevIsReviewPosting.current = isReviewPosting;
+  }, [isReviewPosting, rating, review]);
 
   const handleSubmit = useCallback((evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -45,11 +55,6 @@ function ReviewForm({ offerId }: ReviewFormProps): JSX.Element {
         },
       }))
         .unwrap()
-        .then(() => {
-          setRating('');
-          setReview('');
-          setError(null);
-        })
         .catch((err) => {
           setError(err || 'Failed to submit review. Please try again.');
         });

@@ -1,31 +1,68 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, Middleware, AnyAction } from '@reduxjs/toolkit';
 import ReviewForm from '../review-form';
 import { offersReducer } from '../../../store/slices/offers-slice';
 import { userReducer } from '../../../store/slices/user-slice';
 import { propertyReducer } from '../../../store/slices/property-slice';
 import { favoritesReducer } from '../../../store/slices/favorites-slice';
+import { postReviewAction } from '../../../store/thunk/thunk';
+import type { Review } from '../../../types/review';
 
-const createMockStore = (isReviewPosting: boolean = false) => configureStore({
-  reducer: {
-    offers: offersReducer,
-    user: userReducer,
-    property: propertyReducer,
-    favorites: favoritesReducer,
+const mockReview: Review = {
+  id: '1',
+  date: '2024-01-01',
+  user: {
+    name: 'Test User',
+    avatarUrl: 'avatar.jpg',
+    isPro: false,
   },
-  preloadedState: {
-    property: {
-      currentOffer: null,
-      nearbyOffers: [],
-      reviews: [],
-      isOfferLoading: false,
-      isReviewPosting,
+  comment: 'Test comment',
+  rating: 5,
+};
+
+const createMockStore = (isReviewPosting: boolean = false, autoResolve: boolean = false) => {
+  let storeRef: ReturnType<typeof configureStore> | null = null;
+
+  const mockMiddleware: Middleware = () => (next) => (action: AnyAction) => {
+    if (autoResolve && storeRef && action && typeof action === 'object' && 'type' in action) {
+      const actionType = String((action as { type: unknown }).type);
+      if (actionType === 'data/postReview/pending') {
+        setTimeout(() => {
+          storeRef!.dispatch(postReviewAction.fulfilled(mockReview, '', {
+            offerId: '1',
+            reviewData: { comment: 'Test comment', rating: 5 },
+          }));
+        }, 0);
+      }
+    }
+    return next(action);
+  };
+
+  const store = configureStore({
+    reducer: {
+      offers: offersReducer,
+      user: userReducer,
+      property: propertyReducer,
+      favorites: favoritesReducer,
     },
-  },
-});
+    preloadedState: {
+      property: {
+        currentOffer: null,
+        nearbyOffers: [],
+        reviews: [],
+        isOfferLoading: false,
+        isReviewPosting,
+      },
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(mockMiddleware),
+  });
+
+  storeRef = store;
+  return store;
+};
 
 describe('ReviewForm', () => {
   beforeEach(() => {
@@ -152,7 +189,7 @@ describe('ReviewForm', () => {
 
   it('should clear form after successful submit', async () => {
     const user = userEvent.setup();
-    const store = createMockStore();
+    const store = createMockStore(false, true);
     const { container } = render(
       <Provider store={store}>
         <ReviewForm offerId="1" />
@@ -165,8 +202,9 @@ describe('ReviewForm', () => {
     const reviewText = 'a'.repeat(50);
     await user.type(textarea, reviewText);
     await user.click(submitButton);
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    expect(textarea).toHaveValue('');
+    await waitFor(() => {
+      expect(textarea).toHaveValue('');
+    }, { timeout: 1000 });
   });
 
   it('should disable submit button when review is posting', () => {
